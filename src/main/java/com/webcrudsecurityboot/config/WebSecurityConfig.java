@@ -16,8 +16,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 @Configuration
-@EnableWebSecurity/*(debug = true)*/
-@ComponentScan("com.webcrudsecurityboot.webcrudsecurityboot")
+@EnableWebSecurity
+@ComponentScan("com.webcrudsecurityboot")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService; // сервис, с помощью которого тащим пользователя
     private final LoginSuccessHandler loginSuccessHandler;
