@@ -12,8 +12,8 @@ import java.util.Set;
 @Component
     public class DataLoader{
 
-        private UserService userService;
-        private RoleService roleService;
+        private final UserService userService;
+        private final RoleService roleService;
 
         @Autowired
         public DataLoader (UserService userService, RoleService roleService) {

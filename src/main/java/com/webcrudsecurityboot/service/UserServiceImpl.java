@@ -1,11 +1,11 @@
 package com.webcrudsecurityboot.service;
 
-import com.webcrudsecurityboot.repository.UserRepository;
+import com.webcrudsecurityboot.config.EncoderConfig;
 import com.webcrudsecurityboot.model.User;
+import com.webcrudsecurityboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,13 +15,14 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final EncoderConfig encoderConfig;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, EncoderConfig encoderConfig) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.encoderConfig = encoderConfig;
+
     }
 
     @Override
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(encoderConfig.passwordEncoder().encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void update(User updatedUser) {
         if(!updatedUser.getPassword().equals(userRepository.show(updatedUser.getId()).getPassword())) {
-            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            updatedUser.setPassword(encoderConfig.passwordEncoder().encode(updatedUser.getPassword()));
         }
         userRepository.update(updatedUser);
     }
