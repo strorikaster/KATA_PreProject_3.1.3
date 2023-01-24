@@ -1,11 +1,11 @@
 package com.webcrudsecurityboot.service;
 
-import com.webcrudsecurityboot.config.EncoderConfig;
 import com.webcrudsecurityboot.model.User;
 import com.webcrudsecurityboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +16,12 @@ public class UserServiceImpl implements UserService {
 
 
     private final UserRepository userRepository;
-    private final EncoderConfig encoderConfig;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, EncoderConfig encoderConfig) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.encoderConfig = encoderConfig;
-
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void save(User user) {
-        user.setPassword(encoderConfig.passwordEncoder().encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -46,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void update(User updatedUser) {
         if(!updatedUser.getPassword().equals(userRepository.show(updatedUser.getId()).getPassword())) {
-            updatedUser.setPassword(encoderConfig.passwordEncoder().encode(updatedUser.getPassword()));
+            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
         userRepository.update(updatedUser);
     }
