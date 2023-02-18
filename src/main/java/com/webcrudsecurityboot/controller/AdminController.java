@@ -97,13 +97,7 @@ public class AdminController {
         if(bindingResult.hasErrors()) {
             return "new";
         }
-        HashSet<Role> roles = new HashSet<>();
-        for(Long roleId : rolesId) {
-            roles.add(roleService.show(roleId));
-        }
-
-        user.setRoles(roles);
-        userService.save(user);
+        userService.save(user, rolesId);
         return "redirect:/admin";
     }
 
@@ -120,12 +114,7 @@ public class AdminController {
                          @RequestParam("rolesSelected") Long[] rolesId
 
     ) {
-        Set<Role> roles = new HashSet();
-        for(Long roleId : rolesId) {
-            roles.add(roleService.show(roleId));
-        }
-        user.setRoles(roles);
-        userService.update(user);
+        userService.update(user, rolesId);
         return "redirect:/admin/all";
     }
 
